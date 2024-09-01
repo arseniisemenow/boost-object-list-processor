@@ -14,13 +14,24 @@ class Object {
     Object() = default;
     Object(const std::string &name, double x, double y, const std::string &type,
            double creation_time);
+ public:
+    // Getters
+    [[nodiscard]] std::string GetName() const { return name_; }
+    [[nodiscard]] double GetX() const { return x_; }
+    [[nodiscard]] double GetY() const { return y_; }
+    [[nodiscard]] std::string GetType() const { return type_; }
+    [[nodiscard]] double GetCreationTime() const { return creation_time_; }
+    [[nodiscard]] Metadata& GetMetadata() { return metadata_; }
 
-    [[nodiscard]] std::string GetName() const;
-    [[nodiscard]] double GetX() const;
-    [[nodiscard]] double GetY() const;
-    [[nodiscard]] std::string GetType() const;
-    [[nodiscard]] double GetCreationTime() const;
-    [[nodiscard]] Metadata &GetMetadata();
+    // Setters
+    void SetName(const std::string& name) { name_ = name; }
+    void SetX(double x) { x_ = x; }
+    void SetY(double y) { y_ = y; }
+    void SetType(const std::string& type) { type_ = type; }
+    void SetCreationTime(double creation_time) { creation_time_ = creation_time; }
+    void SetMetadata(const Metadata& metadata) { metadata_ = metadata; }
+
+
 
  private:
     std::string name_;

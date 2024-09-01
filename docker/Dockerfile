@@ -16,7 +16,9 @@ postgresql-server-dev-all \
 rsync \
 gcc \
 g++ \
-gdb
+gdb \
+nlohmann-json3-dev
+
 
 RUN apt-get install -y \
     openssh-server
