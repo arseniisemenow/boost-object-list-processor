@@ -8,27 +8,27 @@
 int main(void) {
     try {
         Router router{};
-        PersonService personService{};
-        ObjectController personController{personService};
+        ObjectService object_service{};
+        ObjectController person_controller{object_service};
         Server server{8080, router};
 
         router.SetPrefix("/v1");
 
-        router.AddRoute(GET, "/person", [personController](auto &ctx) {
-            personController->GetObjects(ctx);
-        });
-//
-//        router_.AddRoute(POST, "/person", [personController](auto &ctx) {
-//            personController->ObjectPerson(ctx);
-//        });
-//
-//        router_.AddRoute(GET, "/person/{id}", [personController](auto &ctx) {
-//            personController->GetObjectById(ctx);
-//        });
-//
-//        router_.AddRoute(DELETE, "/person/{id}", [personController](auto &ctx) {
-//            personController->DeleteObjectById(ctx);
-//        });
+        //        router.AddRoute(GET, "/person", [person_controller](auto &ctx) {
+        //            person_controller->GetObjects(ctx);
+        //        });
+        //
+        //        router_.AddRoute(POST, "/person", [person_controller](auto &ctx) {
+        //            person_controller->ObjectPerson(ctx);
+        //        });
+        //
+        //        router_.AddRoute(GET, "/person/{id}", [person_controller](auto &ctx) {
+        //            person_controller->GetObjectById(ctx);
+        //        });
+        //
+        //        router_.AddRoute(DELETE, "/person/{id}", [person_controller](auto &ctx) {
+        //            person_controller->DeleteObjectById(ctx);
+        //        });
 
         std::cout << "Server starting on port_ " << server.GetPort() << std::endl;
         server.Run();
