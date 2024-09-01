@@ -7,12 +7,12 @@
 
 int main() {
     try {
-        boost::asio::io_context ioc;
+        boost::asio::io_context io_context;
 
-        RestApiHandler api_handler(ioc, "0.0.0.0", 8080);
+        RestApiHandler api_handler(io_context, "0.0.0.0", 8080);
         api_handler.start();
 
-        ioc.run();
+        io_context.run();
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
