@@ -27,7 +27,7 @@ RUN apt-get install -y \
 RUN useradd -m user && yes password | passwd user
 
 # Configure SSH
-RUN mkdir /var/run/sshd
+RUN mkdir /var/Run/sshd
 
 # Allow password authentication and configure SSH
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
