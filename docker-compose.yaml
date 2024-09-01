@@ -11,7 +11,7 @@ services:
       - "5432:5432"
 
   rest_api:
-    build: ./rest_api_service
+    build: server/rest_api_service
     environment:
       DB_HOST: db
       DB_USER: user

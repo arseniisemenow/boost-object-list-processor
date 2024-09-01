@@ -1,18 +1,25 @@
-FROM gcc:latest
+FROM ubuntu:20.04
 
 WORKDIR /app
 
-COPY . .
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y \
-    cmake \
-    libboost-all-dev \
-    libpqxx-dev \
-    libpq-dev \
-    rsync \
-    gdb || true
+RUN apt-get update && apt-get upgrade -y  && apt-get install -y \
+cmake \
+gfortran \
+libcoarrays-dev \
+libboost-all-dev \
+aptitude \
+libpqxx-dev \
+libpq-dev \
+postgresql-server-dev-all \
+rsync \
+gcc \
+g++ \
+gdb
+
 RUN apt-get install -y \
-    openssh-server || true
+    openssh-server
 
 # Create a user and set a password
 RUN useradd -m user && yes password | passwd user
