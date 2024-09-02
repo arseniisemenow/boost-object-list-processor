@@ -13,7 +13,7 @@ namespace http = boost::beast::http;
 class Router {
 
  public:
-    void AddRoute(http::verb method, const std::string &path_pattern,
+    void AddRoute(const http::verb method, const std::string &path_pattern,
                   std::function<void(Context &)> handler);
     bool Route(Context &ctx);
     void SetPrefix(const std::string &prefix);
@@ -28,5 +28,5 @@ class Router {
     std::string prefix_;
 
  private:
-    std::vector<std::string> SplitPath(const std::string &path);
+    static std::vector<std::string> SplitPath(const std::string &path);
 };

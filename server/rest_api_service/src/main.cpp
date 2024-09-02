@@ -14,19 +14,19 @@ int main(void) {
         Server server{8080, router};
 
         router.SetPrefix("/v1");
-        router.AddRoute(GET, "/object", [&](auto &ctx) {
+        router.AddRoute(http::verb::get, "/object", [&](auto &ctx) {
             object_controller.GetObjects(ctx);
         });
 
-        router.AddRoute(POST, "/object", [&](auto &ctx) {
+        router.AddRoute(http::verb::post, "/object", [&](auto &ctx) {
             object_controller.CreateObject(ctx);
         });
 
-        router.AddRoute(http::verb::get, "/person/{id}", [&](auto &ctx) {
+        router.AddRoute(http::verb::get, "/object/{id}", [&](auto &ctx) {
             object_controller.GetObjectById(ctx);
         });
 
-        router.AddRoute(http::verb::delete_, "/person/{id}", [&](auto &ctx) {
+        router.AddRoute(http::verb::delete_, "/object/{id}", [&](auto &ctx) {
             object_controller.DeleteObjectById(ctx);
         });
 

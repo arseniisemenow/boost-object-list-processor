@@ -26,6 +26,5 @@ class ObjectService : public IObjectService {
 
  private:
     std::string connection_string_;// PostgreSQL connection string
-    void InitializeDatabase();     // Helper function to prepare SQL statements
-    void LogSqlError(const pqxx::pqxx_exception &e) const;
+    static void LogSqlError(const pqxx::pqxx_exception &e);
 };

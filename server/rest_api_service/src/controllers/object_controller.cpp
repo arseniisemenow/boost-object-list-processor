@@ -33,7 +33,7 @@ void ObjectController::CreateObject(Context &ctx) {
         object_service_.AddObject(object);
 
         res.result(http::status::created);
-        res.body() = R"({"success": "Person created."})";
+        res.body() = R"({"success": "Object created."})";
         res.set(http::field::content_type, "application/json");
     } catch (const std::exception &e) {
         res.result(http::status::bad_request);

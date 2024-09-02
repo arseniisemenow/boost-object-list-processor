@@ -95,7 +95,7 @@ bool ObjectService::DeleteObjectById(unsigned int id) {
     }
     return false;
 }
-void ObjectService::LogSqlError(const pqxx::pqxx_exception &e) const {
+void ObjectService::LogSqlError(const pqxx::pqxx_exception &e) {
     std::cerr << e.base().what() << std::endl;
     const pqxx::sql_error *p_sql_error = dynamic_cast<const pqxx::sql_error *>(&e.base());
     if (p_sql_error) std::cerr << "Query was: " << p_sql_error->query() << std::endl;

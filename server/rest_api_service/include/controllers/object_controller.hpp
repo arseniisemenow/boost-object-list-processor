@@ -7,10 +7,10 @@
 #include <boost/beast.hpp>
 #include <cstdlib>
 
-namespace beast = boost::beast;// from <boost/beast.hpp>
-namespace http = beast::http;  // from <boost/beast/http.hpp>
-namespace asio = boost::asio;  // from <boost/asio.hpp>
-using tcp = asio::ip::tcp;     // from <boost/asio/ip/tcp.hpp>
+namespace beast = boost::beast;
+namespace http = beast::http;
+namespace asio = boost::asio;
+using tcp = asio::ip::tcp;
 
 class ObjectController {
 
