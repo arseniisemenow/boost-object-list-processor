@@ -59,5 +59,5 @@ Object ObjectSerializer::FromJson(const nlohmann::json &json) {
     auto metadata = JsonToMetadata(json.at("metadata"));
     object.SetMetadata(metadata);
 
-    return Object{name, x, y, type};
+    return object;
 }

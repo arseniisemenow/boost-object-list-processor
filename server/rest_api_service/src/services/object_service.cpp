@@ -24,7 +24,7 @@ void ObjectService::AddObject(const Object &object) {
         nlohmann::json metadata_json = ObjectSerializer::MetadataToJson(object.GetMetadata());
         std::string metadata_str = metadata_json.dump(); // Serialize JSON to string
 
-        pqxx::result result = work.exec_params("INSERT INTO objects (name, x, y, type) VALUES ($1, $2, $3, $4)",
+        pqxx::result result = work.exec_params("INSERT INTO objects (name, x, y, type, metadata) VALUES ($1, $2, $3, $4, $5)",
                                                object.GetName(),
                                                object.GetX(),
                                                object.GetY(),
@@ -43,7 +43,7 @@ std::vector<Object> ObjectService::GetAllObjects() {
         pqxx::connection conn(connection_string_);
         pqxx::work work(conn);
 
-        pqxx::result result = work.exec("SELECT id, name, x, y, type, creation_time FROM objects");
+        pqxx::result result = work.exec("SELECT id, name, x, y, type, creation_time, metadata FROM objects");
 
         for (const auto &row : result) {
             Object object;
@@ -52,6 +52,7 @@ std::vector<Object> ObjectService::GetAllObjects() {
             object.SetY(row["y"].as<double>());
             object.SetType(row["type"].as<std::string>());
             object.SetCreationTime(Object::StringToTimeT(row["creation_time"].as<std::string>()));
+            object.SetMetadata(ObjectSerializer::JsonToMetadata(row["metadata"].as<std::string>()));
 
             objects.insert(objects.cbegin(), object);
         }
