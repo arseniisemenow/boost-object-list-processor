@@ -21,8 +21,6 @@ g++ \
 gdb \
 nlohmann-json3-dev
 
-#RUN psql -U postgres -d postgres -f sql/migration/model.sql
-
 RUN cmake . && make
 
 CMD ["./object-list-processor-server"]

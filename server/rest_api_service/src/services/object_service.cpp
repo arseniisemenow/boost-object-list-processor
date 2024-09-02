@@ -13,7 +13,6 @@ ObjectService::ObjectService(const std::string &connection_string)
         conn.prepare("select_object_by_id", "SELECT id, name, x, y, type, creation_time FROM objects WHERE id = $1");
         conn.prepare("delete_object_by_id", "DELETE FROM objects WHERE id = $1");
         conn.prepare("migrate_table", "DROP TABLE IF EXISTS objects; CREATE TABLE IF NOT EXISTS objects (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, x DOUBLE PRECISION NOT NULL, y DOUBLE PRECISION NOT NULL, \"type\" VARCHAR(100) NOT NULL, creation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);");
-
         MigrateTable();
     } catch (const std::exception &e) {
         //todo: change to another error
@@ -26,18 +25,16 @@ void ObjectService::AddObject(const Object &object) {
     try {
         pqxx::connection conn(connection_string_);
         pqxx::work work(conn);
-
-        work.exec_prepared("insert_object",
-                           object.GetName(),
-                           object.GetX(),
-                           object.GetY(),
-                           object.GetType(),
-                           object.GetCreationTime());
-
+        pqxx::result result = work.exec_params("INSERT INTO objects (name, x, y, type) VALUES ($1, $2, $3, $4)",
+                                               object.GetName(),
+                                               object.GetX(),
+                                               object.GetY(),
+                                               object.GetType());
         work.commit();
-    } catch (const std::exception &e) {
-        //todo: change to another error
-        std::cerr << "Error adding object: " << e.what() << std::endl;
+    } catch (const pqxx::pqxx_exception &e) {
+        std::cerr << e.base().what() << std::endl;
+        const pqxx::sql_error *s=dynamic_cast<const pqxx::sql_error*>(&e.base());
+        if (s) std::cerr << "Query was: " << s->query() << std::endl;
     }
 }
 
@@ -49,6 +46,7 @@ std::vector<Object> ObjectService::GetAllObjects() {
         pqxx::work work(conn);
 
         pqxx::result result = work.exec("SELECT id, name, x, y, type, creation_time FROM objects");
+
 
         for (const auto &row : result) {
             Object object;
@@ -88,11 +86,14 @@ bool ObjectService::DeleteObjectById(unsigned int id) {
     //  }
     return false;
 }
+
+/*
+ * Not the mose grace migration way
+ */
 bool ObjectService::MigrateTable() {
     try {
         pqxx::connection conn(connection_string_);
         pqxx::work work(conn);
-
         pqxx::result result = work.exec("DROP TABLE IF EXISTS objects; CREATE TABLE IF NOT EXISTS objects (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, x DOUBLE PRECISION NOT NULL, y DOUBLE PRECISION NOT NULL, \"type\" VARCHAR(100) NOT NULL, creation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);");
         work.commit();
     } catch (const pqxx::pqxx_exception &e) {

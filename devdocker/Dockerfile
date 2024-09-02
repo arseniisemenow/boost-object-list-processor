@@ -15,7 +15,8 @@ rsync \
 gcc \
 g++ \
 gdb \
-nlohmann-json3-dev
+nlohmann-json3-dev \
+curl
 
 RUN apt-get install -y \
     openssh-server
