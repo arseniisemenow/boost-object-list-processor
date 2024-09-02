@@ -31,8 +31,6 @@ class Object {
     void SetCreationTime(double creation_time) { creation_time_ = creation_time; }
     void SetMetadata(const Metadata& metadata) { metadata_ = metadata; }
 
-
-
  private:
     std::string name_;
     double x_;

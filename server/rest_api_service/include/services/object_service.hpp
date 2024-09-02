@@ -22,7 +22,7 @@ class ObjectService : public IObjectService {
     Object GetObjectById(unsigned int id) override;
     bool DeleteObjectById(unsigned int id) override;
 
-    bool MigrateTable();
+    void MigrateTable();
 
  private:
     std::string connection_string_;// PostgreSQL connection string

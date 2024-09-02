@@ -6,7 +6,7 @@ nlohmann::json ObjectSerializer::ToJson(const Object &object) {
     json["x"] = object.GetX();
     json["y"] = object.GetY();
     json["type"] = object.GetType();
-    json["creation_time"] = object.GetCreationTime();
+    json["creation_time"] = Object::TimeTToString(object.GetCreationTime());
     return json;
 }
 

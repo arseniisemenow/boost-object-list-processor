@@ -8,7 +8,7 @@ ObjectService::ObjectService(std::string connection_string)
     : connection_string_(std::move(connection_string)) {
     try {
         pqxx::connection conn(connection_string_);
-        MigrateTable(); //todo: Remove. Using for testing purpose. Better use Flyway migrating utility
+        MigrateTable();//fixme: Using for testing purpose. Better use Flyway migrating utility
     } catch (const pqxx::pqxx_exception &e) {
         LogSqlError(e);
     }
@@ -44,7 +44,7 @@ std::vector<Object> ObjectService::GetAllObjects() {
             object.SetX(row["x"].as<double>());
             object.SetY(row["y"].as<double>());
             object.SetType(row["type"].as<std::string>());
-            object.SetCreationTime(row["creation_time"].as<std::string>());
+            object.SetCreationTime(Object::StringToTimeT(row["creation_time"].as<std::string>()));
 
             objects.insert(objects.cbegin(), object);
         }
@@ -71,7 +71,7 @@ Object ObjectService::GetObjectById(unsigned int id) {
             object.SetX(row["x"].as<double>());
             object.SetY(row["y"].as<double>());
             object.SetType(row["type"].as<std::string>());
-            object.SetCreationTime(row["creation_time"].as<std::string>());
+            object.SetCreationTime(Object::StringToTimeT(row["creation_time"].as<std::string>()));
         }
 
         work.commit();
@@ -97,14 +97,11 @@ bool ObjectService::DeleteObjectById(unsigned int id) {
 }
 void ObjectService::LogSqlError(const pqxx::pqxx_exception &e) {
     std::cerr << e.base().what() << std::endl;
-    const pqxx::sql_error *p_sql_error = dynamic_cast<const pqxx::sql_error *>(&e.base());
+    auto p_sql_error = dynamic_cast<const pqxx::sql_error *>(&e.base());
     if (p_sql_error) std::cerr << "Query was: " << p_sql_error->query() << std::endl;
 }
 
-/*
- * Not the most grace way of migration
- */
-bool ObjectService::MigrateTable() {
+void ObjectService::MigrateTable() {
     try {
         pqxx::connection conn(connection_string_);
         pqxx::work work(conn);
@@ -113,6 +110,4 @@ bool ObjectService::MigrateTable() {
     } catch (const pqxx::pqxx_exception &e) {
         LogSqlError(e);
     }
-
-    return false;
 }
