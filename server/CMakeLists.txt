@@ -6,11 +6,12 @@ set(CMAKE_CXX_STANDARD 17)
 # Find Boost and Beast
 find_package(Boost REQUIRED)
 find_package(PostgreSQL REQUIRED)
+find_package(Threads REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIRS} ${PostgreSQL_INCLUDE_DIRS})
 include_directories(rest_api_service/include)
 include_directories(db)
-include_directories(../shared)
+include_directories(..)
 
 add_executable(server
         db/base_database_manager.hpp
@@ -32,7 +33,6 @@ add_executable(server
         rest_api_service/include/server.hpp
 )
 
-target_link_libraries(server ${Boost_LIBRARIES} pqxx pq shared)
+target_link_libraries(server ${Boost_LIBRARIES} pqxx pq pthread)
 
 #target_link_libraries(server PRIVATE shared)
-target_include_directories(server PRIVATE ../shared/include)

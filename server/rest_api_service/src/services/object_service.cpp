@@ -1,5 +1,5 @@
 #include "../include/services/object_service.hpp"
-#include "include/models/object.hpp"
+#include "shared/include/models/object.hpp"
 #include <pqxx/pqxx>
 
 ObjectService::ObjectService(const std::string &connection_string)

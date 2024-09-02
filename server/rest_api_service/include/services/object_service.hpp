@@ -1,6 +1,6 @@
 #pragma once
 
-#include "include/models/object.hpp"
+#include "shared/include/models/object.hpp"
 #include <vector>
 
 class IObjectService {

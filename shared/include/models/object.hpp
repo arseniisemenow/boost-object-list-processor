@@ -1,16 +1,16 @@
 #pragma once
 
 #include <boost/asio.hpp>
-#include <boost/json.hpp>
 #include <string>
+#include <variant>
 
 class Object {
  public:
     using Metadata =
         std::unordered_map<std::string, std::variant<int, double, std::string>>;
     Object() = default;
-    Object(const std::string &name, double x, double y, const std::string &type,
-           double creation_time);
+    Object(const std::string& name, double x, double y, const std::string& type, double creation_time)
+        : name_(name), x_(x), y_(y), type_(type), creation_time_(creation_time) {}
  public:
     // Getters
     [[nodiscard]] std::string GetName() const { return name_; }

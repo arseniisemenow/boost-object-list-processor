@@ -1,7 +1,7 @@
 #ifndef OBJECT_SERIALIZER_HPP_
 #define OBJECT_SERIALIZER_HPP_
 
-#include "models/object.hpp"
+#include "shared/include/models/object.hpp"
 #include <nlohmann/json.hpp>
 
 class ObjectSerializer {

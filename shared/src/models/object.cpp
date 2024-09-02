@@ -1,4 +1,4 @@
-#include "models/object.hpp"
+#include "shared/include/models/object.hpp"
 
 /*
 * Foo
