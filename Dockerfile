@@ -23,6 +23,6 @@ nlohmann-json3-dev
 
 RUN cd server && cmake . && make
 
-#CMD ["./server/rest_api_service"]
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+CMD ["./server/server"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
 
