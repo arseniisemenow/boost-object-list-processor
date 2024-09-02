@@ -18,3 +18,6 @@ CREATE TABLE IF NOT EXISTS objects
 ) NOT NULL,
     creation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
+
+
+SELECT id, name, x, y, type, creation_time FROM objects

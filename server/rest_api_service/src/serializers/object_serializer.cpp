@@ -11,10 +11,9 @@ nlohmann::json ObjectSerializer::ToJson(const Object &object) {
 }
 
 Object ObjectSerializer::FromJson(const nlohmann::json &obj) {
-    std::string name = obj.at("name").get<std::string>();
-    double x = obj.at("x").get<double>();
-    double y = obj.at("y").get<double>();
-    std::string type = obj.at("type").get<std::string>();
-    double creation_time = obj.at("creation_time").get<unsigned long>();
-    return Object{name, x, y, type, creation_time};
+    auto name = obj.at("name").get<std::string>();
+    auto x = obj.at("x").get<double>();
+    auto y = obj.at("y").get<double>();
+    auto type = obj.at("type").get<std::string>();
+    return Object{name, x, y, type};
 }
