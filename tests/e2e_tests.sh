@@ -1,5 +1,5 @@
 curl -X POST -H "Content-Type: application/json" \
--d '{"name": "Monitor", "x": 0.01, "y": 0.02, "type": "Tech device"}' \
+-d '{"name": "Monitor", "x": 0.01, "y": 0.02, "type": "Tech device", "metadata": ""}' \
 http://localhost:8080/v1/object -v
 
 echo

@@ -1,5 +1,6 @@
 #include "../include/services/object_service.hpp"
 #include "shared/include/models/object.hpp"
+#include "../include/serializers/object_serializer.hpp"
 #include <iostream>
 #include <pqxx/pqxx>
 #include <utility>
@@ -18,11 +19,17 @@ void ObjectService::AddObject(const Object &object) {
     try {
         pqxx::connection conn(connection_string_);
         pqxx::work work(conn);
+
+
+        nlohmann::json metadata_json = ObjectSerializer::MetadataToJson(object.GetMetadata());
+        std::string metadata_str = metadata_json.dump(); // Serialize JSON to string
+
         pqxx::result result = work.exec_params("INSERT INTO objects (name, x, y, type) VALUES ($1, $2, $3, $4)",
                                                object.GetName(),
                                                object.GetX(),
                                                object.GetY(),
-                                               object.GetType());
+                                               object.GetType(),
+                                               metadata_str);
         work.commit();
     } catch (const pqxx::pqxx_exception &e) {
         LogSqlError(e);
@@ -72,6 +79,8 @@ Object ObjectService::GetObjectById(unsigned int id) {
             object.SetY(row["y"].as<double>());
             object.SetType(row["type"].as<std::string>());
             object.SetCreationTime(Object::StringToTimeT(row["creation_time"].as<std::string>()));
+            nlohmann::json metadata_json = nlohmann::json::parse(row["metadata"].as<std::string>());
+            object.SetMetadata(ObjectSerializer::JsonToMetadata(metadata_json));
         }
 
         work.commit();
@@ -105,7 +114,7 @@ void ObjectService::MigrateTable() {
     try {
         pqxx::connection conn(connection_string_);
         pqxx::work work(conn);
-        pqxx::result result = work.exec("DROP TABLE IF EXISTS objects; CREATE TABLE IF NOT EXISTS objects (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, x DOUBLE PRECISION NOT NULL, y DOUBLE PRECISION NOT NULL, \"type\" VARCHAR(100) NOT NULL, creation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);");
+        pqxx::result result = work.exec("DROP TABLE IF EXISTS objects; CREATE TABLE IF NOT EXISTS objects (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, x DOUBLE PRECISION NOT NULL, y DOUBLE PRECISION NOT NULL, \"type\" VARCHAR(100) NOT NULL, creation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, metadata JSONB);");
         work.commit();
     } catch (const pqxx::pqxx_exception &e) {
         LogSqlError(e);

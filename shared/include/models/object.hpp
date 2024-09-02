@@ -22,7 +22,7 @@ class Object {
     [[nodiscard]] double GetY() const { return y_; }
     [[nodiscard]] std::string GetType() const { return type_; }
     [[nodiscard]] std::time_t GetCreationTime() const { return timestamp_; }
-    [[nodiscard]] Metadata &GetMetadata() { return metadata_; }
+    [[nodiscard]] Metadata GetMetadata() const { return metadata_; }
 
     // Setters
     void SetName(const std::string &name) { name_ = name; }
