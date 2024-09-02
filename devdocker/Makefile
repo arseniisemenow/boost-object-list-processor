@@ -10,3 +10,6 @@ docker_remove_container:
 	-docker stop ${CONTAINER_NAME} && docker rm ${CONTAINER_NAME}
 
 rebuild: docker_remove_container docker_image docker_container
+
+remove_keys_hostname:
+	ssh-keygen -R '[localhost]:2222'

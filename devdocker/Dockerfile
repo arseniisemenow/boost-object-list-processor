@@ -1,7 +1,5 @@
 FROM ubuntu:20.04
 
-WORKDIR /app
-
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get upgrade -y  && apt-get install -y \
@@ -19,7 +17,6 @@ g++ \
 gdb \
 nlohmann-json3-dev
 
-
 RUN apt-get install -y \
     openssh-server
 
@@ -27,13 +24,13 @@ RUN apt-get install -y \
 RUN useradd -m user && yes password | passwd user
 
 # Configure SSH
-RUN mkdir /var/Run/sshd
+RUN mkdir /var/run/sshd
 
 # Allow password authentication and configure SSH
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
-EXPOSE 22
+#EXPOSE 22
 
 #RUN cmake . && make
 

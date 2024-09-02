@@ -21,8 +21,10 @@ g++ \
 gdb \
 nlohmann-json3-dev
 
-RUN cd server && cmake . && make
+#RUN psql -U postgres -d postgres -f sql/migration/model.sql
 
-CMD ["./server/server"]
+RUN cmake . && make
+
+CMD ["./object-list-processor-server"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
 

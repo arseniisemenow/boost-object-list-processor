@@ -21,6 +21,8 @@ class ObjectService : public IObjectService {
     std::optional<Object> GetObjectById(unsigned int id) override;
     bool DeleteObjectById(unsigned int id) override;
 
+    bool MigrateTable();
+
  private:
     std::string connection_string_;// PostgreSQL connection string
     void InitializeDatabase();     // Helper function to prepare SQL statements

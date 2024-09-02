@@ -7,7 +7,7 @@
 
 int main(void) {
     try {
-        std::string connection_string = "postgresql://postgres:postgres@localhost:5432/postgres\";";
+        std::string connection_string = "dbname=postgres user=postgres password=postgres host=postgres_db";
         Router router{};
         ObjectService object_service{connection_string};
         ObjectController object_controller{object_service};
@@ -17,10 +17,10 @@ int main(void) {
         router.AddRoute(GET, "/object", [&](auto &ctx) {
             object_controller.GetObjects(ctx);
         });
-        //
-        //        router_.AddRoute(POST, "/person", [object_controller](auto &ctx) {
-        //            object_controller->ObjectPerson(ctx);
-        //        });
+
+        router.AddRoute(POST, "/object", [&](auto &ctx) {
+            object_controller.CreateObject(ctx);
+        });
         //
         //        router_.AddRoute(GET, "/person/{id}", [object_controller](auto &ctx) {
         //            object_controller->GetObjectById(ctx);

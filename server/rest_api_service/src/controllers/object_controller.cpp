@@ -23,7 +23,7 @@ void ObjectController::GetObjects(Context &ctx) {
     }
 }
 
-void ObjectController::ObjectPerson(Context &ctx) {
+void ObjectController::CreateObject(Context &ctx) {
     auto &req = ctx.GetRequest();
     auto &res = ctx.GetResponse();
 

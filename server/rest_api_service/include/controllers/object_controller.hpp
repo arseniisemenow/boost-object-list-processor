@@ -19,7 +19,7 @@ public:
       : object_service_(service) {}
 
   void GetObjects(Context &ctx);
-  void ObjectPerson(Context &ctx);
+  void CreateObject(Context &ctx);
   void GetObjectById(Context &ctx);
   void DeleteObjectById(Context &ctx);
 
