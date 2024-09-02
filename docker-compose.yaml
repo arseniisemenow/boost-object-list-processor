@@ -10,8 +10,10 @@ services:
     ports:
       - "5432:5432"
 
-  rest_api:
-    build: server/rest_api_service
+  rest_api_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       DB_HOST: db
       DB_USER: user

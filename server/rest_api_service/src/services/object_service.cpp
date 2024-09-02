@@ -1,5 +1,6 @@
 #include "../include/services/object_service.hpp"
 #include "shared/include/models/object.hpp"
+#include <iostream>
 #include <pqxx/pqxx>
 
 ObjectService::ObjectService(const std::string &connection_string)
@@ -14,7 +15,7 @@ ObjectService::ObjectService(const std::string &connection_string)
 
     } catch (const std::exception &e) {
         //todo: change to another error
-//        std::cerr << "Error preparing statements: " << e.what() << std::endl;
+        std::cerr << "Error preparing statements: " << e.what() << std::endl;
     }
 }
 
