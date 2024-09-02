@@ -2,22 +2,15 @@
 #include "shared/include/models/object.hpp"
 #include <iostream>
 #include <pqxx/pqxx>
+#include <utility>
 
-ObjectService::ObjectService(const std::string &connection_string)
-    : connection_string_(connection_string) {
+ObjectService::ObjectService(std::string connection_string)
+    : connection_string_(std::move(connection_string)) {
     try {
         pqxx::connection conn(connection_string_);
-
-        //        conn.prepare("insert_object", "INSERT INTO objects (name, x, y, type, creation_time) VALUES ($1, $2, $3, $4, $5)");
-        //        conn.prepare("select_object_by_id", "SELECT id, name, x, y, type, creation_time FROM objects WHERE id = $1");
-        //        conn.prepare("delete_object_by_id", "DELETE FROM objects WHERE id = $1");
-        //        conn.prepare("migrate_table", "DROP TABLE IF EXISTS objects; CREATE TABLE IF NOT EXISTS objects (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, x DOUBLE PRECISION NOT NULL, y DOUBLE PRECISION NOT NULL, \"type\" VARCHAR(100) NOT NULL, creation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);");
-        //WARN: DO NOT DO LIKE THIS
-        MigrateTable();
-    } catch (const std::exception &e) {
-        //todo: change to another error
-        std::cerr << "Error object service constructor: " << e.what() << std::endl;
-        throw std::invalid_argument("Error object service constructor");
+        MigrateTable(); //todo: Remove. Using for testing purpose. Better use Flyway migrating utility
+    } catch (const pqxx::pqxx_exception &e) {
+        LogSqlError(e);
     }
 }
 
@@ -32,9 +25,7 @@ void ObjectService::AddObject(const Object &object) {
                                                object.GetType());
         work.commit();
     } catch (const pqxx::pqxx_exception &e) {
-        std::cerr << e.base().what() << std::endl;
-        const pqxx::sql_error *s = dynamic_cast<const pqxx::sql_error *>(&e.base());
-        if (s) std::cerr << "Query was: " << s->query() << std::endl;
+        LogSqlError(e);
     }
 }
 
@@ -53,43 +44,65 @@ std::vector<Object> ObjectService::GetAllObjects() {
             object.SetX(row["x"].as<double>());
             object.SetY(row["y"].as<double>());
             object.SetType(row["type"].as<std::string>());
-//            object.SetCreationTime(row["creation_time"].as<std::time_t>()); //todo: fix
+            object.SetCreationTime(row["creation_time"].as<std::string>());
 
             objects.insert(objects.cbegin(), object);
         }
         work.commit();
 
     } catch (const pqxx::pqxx_exception &e) {
-        std::cerr << e.base().what() << std::endl;
-        const pqxx::sql_error *s = dynamic_cast<const pqxx::sql_error *>(&e.base());
-        if (s) std::cerr << "Query was: " << s->query() << std::endl;
+        LogSqlError(e);
     }
 
     return objects;
 }
 
-std::optional<Object> ObjectService::GetObjectById(unsigned int id) {
-    //  for (auto &Object : objects_) {
-    //    if (Object.getId() == id)
-    //      return Object;
-    //  }
-    return std::nullopt;
+Object ObjectService::GetObjectById(unsigned int id) {
+    Object object{};
+
+    try {
+        pqxx::connection conn(connection_string_);
+        pqxx::work work(conn);
+
+        pqxx::result result = work.exec_params("SELECT id, name, x, y, type, creation_time FROM objects WHERE id = $1", id);
+
+        for (const auto &row : result) {
+            object.SetName(row["name"].as<std::string>());
+            object.SetX(row["x"].as<double>());
+            object.SetY(row["y"].as<double>());
+            object.SetType(row["type"].as<std::string>());
+            object.SetCreationTime(row["creation_time"].as<std::string>());
+        }
+
+        work.commit();
+    } catch (const pqxx::pqxx_exception &e) {
+        LogSqlError(e);
+    }
+
+    return object;
 }
 
 bool ObjectService::DeleteObjectById(unsigned int id) {
-    //  for (auto it = objects_.begin(); it != objects_.end();) {
-    //    if (it->getId() == id) {
-    //      it = objects_.erase(it);
-    //      return true;
-    //    } else {
-    //      ++it;
-    //    }
-    //  }
+    try {
+        pqxx::connection conn(connection_string_);
+        pqxx::work work(conn);
+
+        pqxx::result result = work.exec_params("DELETE FROM objects WHERE id = $1", id);
+        work.commit();
+        return true;
+    } catch (const pqxx::pqxx_exception &e) {
+        LogSqlError(e);
+    }
     return false;
+}
+void ObjectService::LogSqlError(const pqxx::pqxx_exception &e) const {
+    std::cerr << e.base().what() << std::endl;
+    const pqxx::sql_error *p_sql_error = dynamic_cast<const pqxx::sql_error *>(&e.base());
+    if (p_sql_error) std::cerr << "Query was: " << p_sql_error->query() << std::endl;
 }
 
 /*
- * Not the most grace migration way
+ * Not the most grace way of migration
  */
 bool ObjectService::MigrateTable() {
     try {
@@ -98,9 +111,7 @@ bool ObjectService::MigrateTable() {
         pqxx::result result = work.exec("DROP TABLE IF EXISTS objects; CREATE TABLE IF NOT EXISTS objects (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, x DOUBLE PRECISION NOT NULL, y DOUBLE PRECISION NOT NULL, \"type\" VARCHAR(100) NOT NULL, creation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);");
         work.commit();
     } catch (const pqxx::pqxx_exception &e) {
-        std::cerr << e.base().what() << std::endl;
-        const pqxx::sql_error *s = dynamic_cast<const pqxx::sql_error *>(&e.base());
-        if (s) std::cerr << "Query was: " << s->query() << std::endl;
+        LogSqlError(e);
     }
 
     return false;

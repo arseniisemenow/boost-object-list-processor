@@ -21,16 +21,16 @@ int main(void) {
         router.AddRoute(POST, "/object", [&](auto &ctx) {
             object_controller.CreateObject(ctx);
         });
-        //
-        //        router_.AddRoute(GET, "/person/{id}", [object_controller](auto &ctx) {
-        //            object_controller->GetObjectById(ctx);
-        //        });
-        //
-        //        router_.AddRoute(DELETE, "/person/{id}", [object_controller](auto &ctx) {
-        //            object_controller->DeleteObjectById(ctx);
-        //        });
 
-        std::cout << "Server starting on port_ " << server.GetPort() << std::endl;
+        router.AddRoute(http::verb::get, "/person/{id}", [&](auto &ctx) {
+            object_controller.GetObjectById(ctx);
+        });
+
+        router.AddRoute(http::verb::delete_, "/person/{id}", [&](auto &ctx) {
+            object_controller.DeleteObjectById(ctx);
+        });
+
+        std::cout << "Server starting on port " << server.GetPort() << std::endl;
         server.Run();
     } catch (std::exception const &e) {
         std::cerr << "Error: " << e.what() << std::endl;

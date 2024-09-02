@@ -12,7 +12,7 @@ void ObjectController::GetObjects(Context &ctx) {
             json_array.push_back(ObjectSerializer::ToJson(object));
         }
 
-        std::string json_string = json_array.dump(); // Serialize to JSON string
+        std::string json_string = json_array.dump();
         res.result(http::status::ok);
         res.body() = json_string;
         res.set(http::field::content_type, "application/json");
@@ -28,8 +28,8 @@ void ObjectController::CreateObject(Context &ctx) {
     auto &res = ctx.GetResponse();
 
     try {
-        auto json = nlohmann::json::parse(req.body());  // Parse the request body as JSON
-        auto object = ObjectSerializer::FromJson(json); // Convert JSON to Object
+        auto json = nlohmann::json::parse(req.body());
+        auto object = ObjectSerializer::FromJson(json);
         object_service_.AddObject(object);
 
         res.result(http::status::created);
@@ -48,15 +48,14 @@ void ObjectController::GetObjectById(Context &ctx) {
     try {
         unsigned int id = std::atoi(ctx.GetParam("id").c_str());
         auto object = object_service_.GetObjectById(id);
-
-        if (object) {
-            std::string jsonString = ObjectSerializer::ToJson(object.value()).dump(); // Convert Object to JSON string
+        if (object.GetCreationTime()) {
+            std::string jsonString = ObjectSerializer::ToJson(object).dump();
             res.result(http::status::ok);
             res.body() = jsonString;
             res.set(http::field::content_type, "application/json");
         } else {
             res.result(http::status::not_found);
-            res.body() = R"({"error": "Person not found."})";
+            res.body() = R"({"error": "Object not found."})";
             res.set(http::field::content_type, "application/json");
         }
     } catch (const std::exception &e) {
@@ -73,10 +72,10 @@ void ObjectController::DeleteObjectById(Context &ctx) {
         unsigned int id = std::atoi(ctx.GetParam("id").c_str());
 
         if (object_service_.DeleteObjectById(id)) {
-            res.result(http::status::no_content); // No content status for successful deletion
+            res.result(http::status::no_content);
         } else {
             res.result(http::status::not_found);
-            res.body() = R"({"error": "Person not found."})";
+            res.body() = R"({"error": "Object not found."})";
             res.set(http::field::content_type, "application/json");
         }
     } catch (const std::exception &e) {
