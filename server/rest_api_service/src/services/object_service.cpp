@@ -22,7 +22,7 @@ void ObjectService::AddObject(const Object &object) {
 
 
         nlohmann::json metadata_json = ObjectSerializer::MetadataToJson(object.GetMetadata());
-        std::string metadata_str = metadata_json.dump(); // Serialize JSON to string
+        std::string metadata_str = metadata_json.dump();
 
         pqxx::result result = work.exec_params("INSERT INTO objects (name, x, y, type, metadata) VALUES ($1, $2, $3, $4, $5)",
                                                object.GetName(),
