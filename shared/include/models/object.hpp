@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OBJECT_HPP_H_
+#define OBJECT_HPP_H_
 
 #include <boost/asio.hpp>
 #include <iomanip>
@@ -63,3 +64,5 @@ class Object {
 
  private:
 };
+
+#endif// OBJECT_HPP_H_

@@ -12,6 +12,7 @@ include_directories(${Boost_INCLUDE_DIRS} ${PostgreSQL_INCLUDE_DIRS})
 include_directories(server/rest_api_service/include)
 include_directories(server/db)
 include_directories(.)
+include_directories(server/rest_api_service/include)
 
 add_executable(object-list-processor-server
         server/db/base_database_manager.hpp
@@ -31,6 +32,8 @@ add_executable(object-list-processor-server
         server/rest_api_service/include/router.hpp
         server/rest_api_service/src/server.cpp
         server/rest_api_service/include/server.hpp
+        server/rest_api_service/include/aux/object_group_handler/object_group_handler.hpp
+        server/rest_api_service/src/aux/object_group_handler/object_group_handler.cc
 )
 
 target_link_libraries(object-list-processor-server ${Boost_LIBRARIES} pqxx pq pthread)
