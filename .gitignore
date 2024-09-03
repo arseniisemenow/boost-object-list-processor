@@ -2,5 +2,4 @@
 *.o
 *.out
 .idea
-
-
+__pycache__/

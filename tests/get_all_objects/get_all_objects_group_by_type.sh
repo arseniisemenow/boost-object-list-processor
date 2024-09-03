@@ -1,0 +1,1 @@
+curl -H "Content-Type: application/json" "http://localhost:8080/v1/object?group_by=type&min_count=1"
