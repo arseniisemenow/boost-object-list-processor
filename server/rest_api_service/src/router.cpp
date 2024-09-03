@@ -11,18 +11,26 @@ bool Router::Route(Context &ctx) {
     const auto &req = ctx.GetRequest();
     std::string target = std::string(req.target());
 
-    if (!prefix_.empty() && target.find(prefix_) == 0) {
-        target.erase(0, prefix_.size());
+    // Split the target into the path and the query string
+    std::string::size_type query_pos = target.find('?');
+    std::string path = target.substr(0, query_pos);  // Path without query string
+    std::string query_string = (query_pos != std::string::npos) ? target.substr(query_pos + 1) : "";
+
+    // Store query parameters in the context
+    ctx.SetQueryParams(query_string);
+
+    if (!prefix_.empty() && path.find(prefix_) == 0) {
+        path.erase(0, prefix_.size());
     }
-    if (!target.empty() && target.back() == '/') {
-        target.pop_back();
+    if (!path.empty() && path.back() == '/') {
+        path.pop_back();
     }
 
     for (const auto &route_info : routes_) {
         if (req.method() != route_info.method)
             continue;
 
-        std::vector<std::string> target_segments = SplitPath(target);
+        std::vector<std::string> target_segments = SplitPath(path);
         std::vector<std::string> pattern_segments = SplitPath(route_info.pathPattern);
 
         if (target_segments.size() != pattern_segments.size())
@@ -45,7 +53,7 @@ bool Router::Route(Context &ctx) {
             return true;
         }
     }
-    return false;// There is no matching Route found
+    return false; // No matching route found
 }
 
 void Router::SetPrefix(const std::string &prefix) {

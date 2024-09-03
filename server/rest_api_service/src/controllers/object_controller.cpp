@@ -133,23 +133,31 @@ void ObjectController::GetObjects(Context &ctx) {
         auto n = std::atoi(ctx.GetParam("min_count").c_str());
         auto objects = object_service_.GetAllObjects();
 
+        std::map<std::string, std::vector<Object>> grouped_objects;
+
         if (group_by == "distance") {
-            GroupByDistance(objects);
+            grouped_objects = GroupByDistance(objects);
         } else if (group_by == "name") {
-            GroupByName(objects);
+            grouped_objects = GroupByName(objects);
         } else if (group_by == "type") {
-            GroupByType(objects, n);
+            grouped_objects = GroupByType(objects, n);
         } else if (group_by == "time") {
-            GroupByCreationTime(objects);
+            grouped_objects = GroupByCreationTime(objects);
+        } else {
+            grouped_objects["all"] = objects;
         }
 
-        nlohmann::json json_array = nlohmann::json::array();
+        nlohmann::json json_result;
 
-        for (const auto &object : objects) {
-            json_array.push_back(ObjectSerializer::ToJson(object));
+        for (const auto &group : grouped_objects) {
+            nlohmann::json json_array = nlohmann::json::array();
+            for (const auto &object : group.second) {
+                json_array.push_back(ObjectSerializer::ToJson(object));
+            }
+            json_result[group.first] = json_array;
         }
 
-        std::string json_string = json_array.dump();
+        std::string json_string = json_result.dump();
         res.result(http::status::ok);
         res.body() = json_string;
         res.set(http::field::content_type, "application/json");
