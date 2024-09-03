@@ -52,7 +52,9 @@ std::vector<Object> ObjectService::GetAllObjects() {
             object.SetY(row["y"].as<double>());
             object.SetType(row["type"].as<std::string>());
             object.SetCreationTime(Object::StringToTimeT(row["creation_time"].as<std::string>()));
-            object.SetMetadata(ObjectSerializer::JsonToMetadata(row["metadata"].as<std::string>()));
+            auto metadata_string = row["metadata"].as<std::string>();
+            auto metadata = ObjectSerializer::JsonToMetadata(nlohmann::json::parse(metadata_string));
+            object.SetMetadata(metadata);
 
             objects.insert(objects.cbegin(), object);
         }

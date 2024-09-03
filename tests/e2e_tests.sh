@@ -37,8 +37,15 @@ http://localhost:8080/v1/object
 #curl -H "Content-Type: application/json" \
 #http://localhost:8080/v1/object -v
 # Retrieve all objects
+curl -H "Content-Type: application/json" "http://localhost:8080/v1/object"
 curl -H "Content-Type: application/json" "http://localhost:8080/v1/object?group_by=name"
 curl -H "Content-Type: application/json" "http://localhost:8080/v1/object?group_by=type&min_count=1"
 curl -H "Content-Type: application/json" "http://localhost:8080/v1/object?group_by=time"
 curl -H "Content-Type: application/json" "http://localhost:8080/v1/object?group_by=distance"
 curl -H "Content-Type: application/json" http://localhost:8080/v1/object? -v
+
+
+curl -X POST -H "Content-Type: application/json" \
+-d '{"name": "BAMouse", "x": 1001.23, "y": 12100.20, "type": "Tech device 3", "metadata": {"speed": 400}}' \
+http://localhost:8080/v1/object
+curl -H "Content-Type: application/json" "http://localhost:8080/v1/object"
