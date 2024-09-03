@@ -4,9 +4,10 @@ project(object-list-processor)
 set(CMAKE_CXX_STANDARD 17)
 
 # Find Boost and Beast
-find_package(Boost REQUIRED)
-find_package(PostgreSQL REQUIRED)
-find_package(Threads REQUIRED)
+find_package(Boost)
+find_package(PostgreSQL)
+find_package(Threads)
+find_package(CURL)
 
 include_directories(${Boost_INCLUDE_DIRS} ${PostgreSQL_INCLUDE_DIRS})
 include_directories(server/rest_api_service/include)
@@ -36,6 +37,13 @@ add_executable(object-list-processor-server
         server/rest_api_service/src/aux/object_group_handler/object_group_handler.cc
 )
 
+add_executable(object-list-processor-client
+        shared/src/models/object.cpp
+        shared/include/models/object.hpp
+        client/src/main.cc
+)
+
 target_link_libraries(object-list-processor-server ${Boost_LIBRARIES} pqxx pq pthread)
+target_link_libraries(object-list-processor-client curl)
 
 #target_link_libraries(server PRIVATE shared)

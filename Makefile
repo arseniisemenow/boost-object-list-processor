@@ -14,4 +14,3 @@ get_all_objects_group_by_time:
 	sh tests/get_all_objects/get_all_objects_group_by_time.sh
 get_all_objects_group_by_type:
 	sh tests/get_all_objects/get_all_objects_group_by_type.sh
-

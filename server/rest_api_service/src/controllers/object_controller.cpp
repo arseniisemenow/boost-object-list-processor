@@ -5,6 +5,7 @@
 void ObjectController::GetObjects(Context &ctx) {
     auto &res = ctx.GetResponse();
 
+    //todo: add limit and offset
     try {
         auto group_by = ctx.GetParam("group_by");
         auto min_count = std::atoi(ctx.GetParam("min_count").c_str());

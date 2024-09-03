@@ -21,7 +21,7 @@ g++ \
 gdb \
 nlohmann-json3-dev
 
-RUN cmake . && make
+RUN cmake --target object-list-processor-server && make
 
 CMD ["./object-list-processor-server"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
