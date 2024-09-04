@@ -1,6 +1,6 @@
+#include <curl/curl.h>
 #include <iostream>
 #include <string>
-#include <curl/curl.h>
 
 const std::string kUrls[] = {
     "http://localhost:8080/v1/object",
@@ -18,20 +18,20 @@ void print_menu() {
     std::cout << "4. Get all objects grouped by time\n";
     std::cout << "5. Get all objects grouped by distance\n";
     std::cout << "6. Insert new object\n";
-    std::cout << "7. Exit\n";
+    std::cout << "7. Delete all objects\n";
+    std::cout << "8. Exit\n";
     std::cout << "Choose an option: ";
 }
 
 // CURL write callback to capture the HTTP response body
-size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* response) {
+size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *response) {
     size_t total_size = size * nmemb;
-    response->append((char*)contents, total_size);
+    response->append((char *) contents, total_size);
     return total_size;
 }
 
-// Function to make a GET request to retrieve all objects
 void get_all_objects(const int url_index) {
-    CURL* curl;
+    CURL *curl;
     CURLcode res;
     std::string response_string;
 
@@ -46,7 +46,33 @@ void get_all_objects(const int url_index) {
         if (res != CURLE_OK) {
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
         } else {
-            std::cout << "Objects retrieved:\n" << response_string << std::endl;
+            std::cout << "Objects retrieved:\n"
+                      << response_string << std::endl;
+        }
+
+        curl_easy_cleanup(curl);
+    }
+    curl_global_cleanup();
+}
+void delete_all_objects() {
+    CURL *curl;
+    CURLcode res;
+    std::string response_string;
+
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_easy_setopt(curl, CURLOPT_URL, kUrls[0].c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
+
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
+        } else {
+            std::cout << "Objects deleted:\n"
+                      << response_string << std::endl;
         }
 
         curl_easy_cleanup(curl);
@@ -55,9 +81,8 @@ void get_all_objects(const int url_index) {
 }
 
 // Function to build a JSON string manually
-std::string build_json(const std::string& name, int x, int y, const std::string& type, const std::string& metadata) {
-    return "{\"name\":\"" + name + "\",\"x\":" + std::to_string(x) + ",\"y\":" + std::to_string(y) +
-        ",\"type\":\"" + type + "\",\"metadata\":" + metadata + "}";
+std::string build_json(const std::string &name, int x, int y, const std::string &type, const std::string &metadata) {
+    return "{\"name\":\"" + name + "\",\"x\":" + std::to_string(x) + ",\"y\":" + std::to_string(y) + ",\"type\":\"" + type + "\",\"metadata\":" + metadata + "}";
 }
 
 // Function to make a POST request to insert a new object
@@ -106,14 +131,14 @@ void insert_new_object() {
 
     std::string json_payload = build_json(name, x, y, type, metadata_json);
 
-    CURL* curl;
+    CURL *curl;
     CURLcode res;
     std::string response_string;
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
     if (curl) {
-        struct curl_slist* headers = NULL;
+        struct curl_slist *headers = NULL;
         headers = curl_slist_append(headers, "Content-Type: application/json");
 
         curl_easy_setopt(curl, CURLOPT_URL, kUrls[0].c_str());
@@ -130,7 +155,8 @@ void insert_new_object() {
             if (response_string.empty()) {
                 std::cout << "Object inserted successfully." << std::endl;
             } else {
-                std::cout << "Response:\n" << response_string << std::endl;
+                std::cout << "Response:\n"
+                          << response_string << std::endl;
             }
         }
 
@@ -167,6 +193,9 @@ void insert_new_object() {
                 insert_new_object();
                 break;
             case 7:
+                delete_all_objects();
+                break;
+            case 8:
                 std::cout << "Exiting...\n";
                 return 0;
             default:

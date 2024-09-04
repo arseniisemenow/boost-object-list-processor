@@ -1,6 +1,6 @@
 #include "../include/services/object_service.hpp"
-#include "shared/include/models/object.hpp"
 #include "../include/serializers/object_serializer.hpp"
+#include "shared/include/models/object.hpp"
 #include <iostream>
 #include <pqxx/pqxx>
 #include <utility>
@@ -9,7 +9,7 @@ ObjectService::ObjectService(std::string connection_string)
     : connection_string_(std::move(connection_string)) {
     try {
         pqxx::connection conn(connection_string_);
-        MigrateTable();//fixme: Using for testing purpose. Better use Flyway migrating utility
+        MigrateTable(); //fixme: Using for testing purpose. Better use migrating utility like Flyway
     } catch (const pqxx::pqxx_exception &e) {
         LogSqlError(e);
     }
@@ -19,7 +19,6 @@ void ObjectService::AddObject(const Object &object) {
     try {
         pqxx::connection conn(connection_string_);
         pqxx::work work(conn);
-
 
         nlohmann::json metadata_json = ObjectSerializer::MetadataToJson(object.GetMetadata());
         std::string metadata_str = metadata_json.dump();
@@ -100,6 +99,20 @@ bool ObjectService::DeleteObjectById(unsigned int id) {
         pqxx::work work(conn);
 
         pqxx::result result = work.exec_params("DELETE FROM objects WHERE id = $1", id);
+        work.commit();
+        return true;
+    } catch (const pqxx::pqxx_exception &e) {
+        LogSqlError(e);
+    }
+    return false;
+}
+
+bool ObjectService::DeleteAllObjects() {
+    try {
+        pqxx::connection conn(connection_string_);
+        pqxx::work work(conn);
+
+        pqxx::result result = work.exec("TRUNCATE objects;DELETE FROM objects;");
         work.commit();
         return true;
     } catch (const pqxx::pqxx_exception &e) {

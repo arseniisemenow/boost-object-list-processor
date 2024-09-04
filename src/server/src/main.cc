@@ -17,6 +17,9 @@ int main(void) {
         router.AddRoute(http::verb::get, "/object", [&](auto &ctx) {
             object_controller.GetObjects(ctx);
         });
+        router.AddRoute(http::verb::delete_, "/object", [&](auto &ctx) {
+            object_controller.DeleteAllObjects(ctx);
+        });
 
         router.AddRoute(http::verb::post, "/object", [&](auto &ctx) {
             object_controller.CreateObject(ctx);

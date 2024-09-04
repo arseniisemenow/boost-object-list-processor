@@ -1,9 +1,14 @@
 all: populate get_all_objects get_all_objects_group_by_distance get_all_objects_group_by_name get_all_objects_group_by_time get_all_objects_group_by_type
 
+1: get_all_objects
+2: populate
+3: delete_all_objects
+
 populate:
 	sh tests/populate/populate.sh
 populate_python:
 	python3 tests/populate/populate.py
+
 get_all_objects:
 	sh tests/get_all_objects/get_all_objects.sh
 get_all_objects_group_by_distance:
@@ -14,6 +19,9 @@ get_all_objects_group_by_time:
 	sh tests/get_all_objects/get_all_objects_group_by_time.sh
 get_all_objects_group_by_type:
 	sh tests/get_all_objects/get_all_objects_group_by_type.sh
+
+delete_all_objects:
+	sh tests/delete_all_objects/delete_all_objects.sh
 
 install: install_server_via_docker install_client
 uninstall: uninstall_server uninstall_client

@@ -10,29 +10,29 @@ find_package(Threads)
 find_package(CURL)
 
 include_directories(${Boost_INCLUDE_DIRS} ${PostgreSQL_INCLUDE_DIRS})
-include_directories(src/server/rest_api_service/include)
+include_directories(src/server/include)
 include_directories(src/server/db)
 include_directories(src)
-include_directories(src/server/rest_api_service/include)
+include_directories(src/server/include)
 
 add_executable(object-list-processor-server
         src/shared/src/models/object.cc
         src/shared/include/models/object.hpp
-        src/server/rest_api_service/src/controllers/object_controller.cc
-        src/server/rest_api_service/include/controllers/object_controller.hpp
-        src/server/rest_api_service/src/serializers/object_serializer.cc
-        src/server/rest_api_service/include/serializers/object_serializer.hpp
-        src/server/rest_api_service/src/services/object_service.cc
-        src/server/rest_api_service/include/services/object_service.hpp
-        src/server/rest_api_service/src/context.cc
-        src/server/rest_api_service/include/context.hpp
-        src/server/rest_api_service/src/main.cc
-        src/server/rest_api_service/src/router.cc
-        src/server/rest_api_service/include/router.hpp
-        src/server/rest_api_service/src/server.cc
-        src/server/rest_api_service/include/server.hpp
-        src/server/rest_api_service/include/aux/object_group_handler/object_group_handler.hpp
-        src/server/rest_api_service/src/aux/object_group_handler/object_group_handler.cc
+        src/server/src/controllers/object_controller.cc
+        src/server/include/controllers/object_controller.hpp
+        src/server/src/serializers/object_serializer.cc
+        src/server/include/serializers/object_serializer.hpp
+        src/server/src/services/object_service.cc
+        src/server/include/services/object_service.hpp
+        src/server/src/context.cc
+        src/server/include/context.hpp
+        src/server/src/main.cc
+        src/server/src/router.cc
+        src/server/include/router.hpp
+        src/server/src/server.cc
+        src/server/include/server.hpp
+        src/server/include/aux/object_group_handler/object_group_handler.hpp
+        src/server/src/aux/object_group_handler/object_group_handler.cc
 )
 
 add_executable(object-list-processor-client

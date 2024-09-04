@@ -10,6 +10,7 @@ class IObjectService {
     virtual std::vector<Object> GetAllObjects() = 0;
     virtual Object GetObjectById(unsigned int id) = 0;
     virtual bool DeleteObjectById(unsigned int id) = 0;
+    virtual bool DeleteAllObjects() = 0;
 };
 
 class ObjectService : public IObjectService {
@@ -21,10 +22,11 @@ class ObjectService : public IObjectService {
     std::vector<Object> GetAllObjects() override;
     Object GetObjectById(unsigned int id) override;
     bool DeleteObjectById(unsigned int id) override;
+    bool DeleteAllObjects() override;
 
     void MigrateTable();
 
  private:
-    std::string connection_string_;// PostgreSQL connection string
+    std::string connection_string_;
     static void LogSqlError(const pqxx::pqxx_exception &e);
 };

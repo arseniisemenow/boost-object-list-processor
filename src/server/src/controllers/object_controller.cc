@@ -113,3 +113,18 @@ void ObjectController::DeleteObjectById(Context &ctx) {
         res.result(http::status::internal_server_error);
     }
 }
+
+void ObjectController::DeleteAllObjects(Context& ctx){
+    auto &res = ctx.GetResponse();
+
+    try {
+        if (object_service_.DeleteAllObjects()) {
+            res.result(http::status::no_content);
+        } else {
+            res.result(http::status::internal_server_error);
+            res.set(http::field::content_type, "application/json");
+        }
+    } catch (const std::exception &e) {
+        res.result(http::status::internal_server_error);
+    }
+}

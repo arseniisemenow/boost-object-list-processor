@@ -22,6 +22,7 @@ class ObjectController {
     void CreateObject(Context &ctx);
     void GetObjectById(Context &ctx);
     void DeleteObjectById(Context &ctx);
+    void DeleteAllObjects(Context &ctx);
 
  private:
     IObjectService &object_service_;
