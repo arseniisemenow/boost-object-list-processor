@@ -29,4 +29,4 @@ make cli
 
 ### 3. Enjoy!
 
-### Time spent: 2+7+7+7+7=29 hours
+### Time spent: 2+7+7+7+7=30 hours
