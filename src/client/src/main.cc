@@ -10,8 +10,7 @@ const std::string kUrls[] = {
     "http://localhost:8080/v1/object?group_by=distance",
 };
 
-// Function to print a menu for user interaction
-void print_menu() {
+void PrintMenu() {
     std::cout << "1. Get all objects\n";
     std::cout << "2. Get all objects grouped by type\n";
     std::cout << "3. Get all objects grouped by name\n";
@@ -23,14 +22,13 @@ void print_menu() {
     std::cout << "Choose an option: ";
 }
 
-// CURL write callback to capture the HTTP response body
 size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *response) {
     size_t total_size = size * nmemb;
     response->append((char *) contents, total_size);
     return total_size;
 }
 
-void get_all_objects(const int url_index) {
+void GetAllObjects(const int url_index) {
     CURL *curl;
     CURLcode res;
     std::string response_string;
@@ -54,7 +52,7 @@ void get_all_objects(const int url_index) {
     }
     curl_global_cleanup();
 }
-void delete_all_objects() {
+void DeleteAllObjects() {
     CURL *curl;
     CURLcode res;
     std::string response_string;
@@ -80,13 +78,11 @@ void delete_all_objects() {
     curl_global_cleanup();
 }
 
-// Function to build a JSON string manually
-std::string build_json(const std::string &name, int x, int y, const std::string &type, const std::string &metadata) {
+std::string BuildJson(const std::string &name, int x, int y, const std::string &type, const std::string &metadata) {
     return "{\"name\":\"" + name + "\",\"x\":" + std::to_string(x) + ",\"y\":" + std::to_string(y) + ",\"type\":\"" + type + "\",\"metadata\":" + metadata + "}";
 }
 
-// Function to make a POST request to insert a new object
-void insert_new_object() {
+void InsertNewObject() {
     std::string name, type, metadata_key, metadata_value, metadata_json;
     int x, y;
 
@@ -103,7 +99,6 @@ void insert_new_object() {
     std::cout << "Enter y coordinate: ";
     std::cin >> y;
 
-    // Collect metadata as JSON string
     std::string add_more_metadata;
     metadata_json = "{";
     bool first = true;
@@ -129,7 +124,7 @@ void insert_new_object() {
 
     metadata_json += "}";
 
-    std::string json_payload = build_json(name, x, y, type, metadata_json);
+    std::string json_payload = BuildJson(name, x, y, type, metadata_json);
 
     CURL *curl;
     CURLcode res;
@@ -170,30 +165,30 @@ int main() {
     int option;
 
     while (true) {
-        print_menu();
+        PrintMenu();
         std::cin >> option;
 
         switch (option) {
             case 1:
-                get_all_objects(0);
+                GetAllObjects(0);
                 break;
             case 2:
-                get_all_objects(1);
+                GetAllObjects(1);
                 break;
             case 3:
-                get_all_objects(2);
+                GetAllObjects(2);
                 break;
             case 4:
-                get_all_objects(3);
+                GetAllObjects(3);
                 break;
             case 5:
-                get_all_objects(4);
+                GetAllObjects(4);
                 break;
             case 6:
-                insert_new_object();
+                InsertNewObject();
                 break;
             case 7:
-                delete_all_objects();
+                DeleteAllObjects();
                 break;
             case 8:
                 std::cout << "Exiting...\n";

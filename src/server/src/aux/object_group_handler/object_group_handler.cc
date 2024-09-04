@@ -15,8 +15,8 @@ std::string GetDistanceGroup(double distance) {
 }
 
 std::string GetNameGroup(const std::string &name) {
-    char first_char = std::toupper(name[0]);
-    if (std::isalpha(first_char)) return std::string(1, first_char);
+    char first_char = static_cast<char>(std::toupper(name[0]));
+    if (std::isalpha(first_char)) return {1, first_char};
     return "#";
 }
 
