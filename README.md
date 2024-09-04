@@ -24,7 +24,7 @@ make install
 
 ### 2. Run the client
 ```bash
-make run
+make cli
 ```
 
 ### 3. Enjoy!
