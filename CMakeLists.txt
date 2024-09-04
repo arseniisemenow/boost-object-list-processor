@@ -9,7 +9,7 @@ find_package(PostgreSQL)
 find_package(Threads)
 find_package(CURL)
 
-include_directories(${Boost_INCLUDE_DIRS} ${PostgreSQL_INCLUDE_DIRS})
+#include_directories(${Boost_INCLUDE_DIRS} ${PostgreSQL_INCLUDE_DIRS})
 include_directories(src/server/rest_api_service/include)
 include_directories(src/server/db)
 include_directories(src)
