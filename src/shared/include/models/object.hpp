@@ -1,10 +1,11 @@
 #ifndef OBJECT_HPP_H_
 #define OBJECT_HPP_H_
 
-#include <boost/asio.hpp>
+#include <unordered_map>
 #include <iomanip>
 #include <string>
 #include <variant>
+#include <sstream>
 
 class Object {
  public:
