@@ -9,3 +9,4 @@ cmake_install.cmake
 build-client
 build-server
 build
+.DS_Store
