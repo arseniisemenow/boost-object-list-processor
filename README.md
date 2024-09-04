@@ -12,7 +12,8 @@ The backend server can be run via Docker or directly using CMake, while the clie
 - `curl` (for testing HTTP requests)
 - Python 3 (optional, for populating data)
 
-## Preview
+## Example Usage
+![Example Usage](readme/example_usage.png)
     
 ## Installation
 
