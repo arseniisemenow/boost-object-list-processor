@@ -166,7 +166,7 @@ void insert_new_object() {
     curl_global_cleanup();
 }
 
-[[noreturn]] int main() {
+int main() {
     int option;
 
     while (true) {
@@ -203,4 +203,5 @@ void insert_new_object() {
                 break;
         }
     }
+    return 0;
 }
