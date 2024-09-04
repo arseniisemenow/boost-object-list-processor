@@ -19,7 +19,7 @@ install: install_server_via_docker install_client
 uninstall: uninstall_server uninstall_client
 
 run:
-	./build/object-list-processor-client
+	./build-client/object-list-processor-client
 
 install_server_via_docker:
 	docker compose up -d

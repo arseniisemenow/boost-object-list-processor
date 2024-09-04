@@ -2,13 +2,23 @@
 #include <string>
 #include <curl/curl.h>
 
-const std::string base_url = "http://localhost:8080/v1/object";
+const std::string kUrls[] = {
+    "http://localhost:8080/v1/object",
+    "http://localhost:8080/v1/object?group_by=type&min_count=1",
+    "http://localhost:8080/v1/object?group_by=name",
+    "http://localhost:8080/v1/object?group_by=time",
+    "http://localhost:8080/v1/object?group_by=distance",
+};
 
 // Function to print a menu for user interaction
 void print_menu() {
     std::cout << "1. Get all objects\n";
-    std::cout << "2. Insert new object\n";
-    std::cout << "3. Exit\n";
+    std::cout << "2. Get all objects grouped by type\n";
+    std::cout << "3. Get all objects grouped by name\n";
+    std::cout << "4. Get all objects grouped by time\n";
+    std::cout << "5. Get all objects grouped by distance\n";
+    std::cout << "6. Insert new object\n";
+    std::cout << "7. Exit\n";
     std::cout << "Choose an option: ";
 }
 
@@ -20,7 +30,7 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* res
 }
 
 // Function to make a GET request to retrieve all objects
-void get_all_objects() {
+void get_all_objects(const int url_index) {
     CURL* curl;
     CURLcode res;
     std::string response_string;
@@ -28,7 +38,7 @@ void get_all_objects() {
     curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
     if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, base_url.c_str());
+        curl_easy_setopt(curl, CURLOPT_URL, kUrls[url_index].c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
 
@@ -106,7 +116,7 @@ void insert_new_object() {
         struct curl_slist* headers = NULL;
         headers = curl_slist_append(headers, "Content-Type: application/json");
 
-        curl_easy_setopt(curl, CURLOPT_URL, base_url.c_str());
+        curl_easy_setopt(curl, CURLOPT_URL, kUrls[0].c_str());
         curl_easy_setopt(curl, CURLOPT_POST, 1L);
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_payload.c_str());
@@ -139,12 +149,24 @@ void insert_new_object() {
 
         switch (option) {
             case 1:
-                get_all_objects();
+                get_all_objects(0);
                 break;
             case 2:
-                insert_new_object();
+                get_all_objects(1);
                 break;
             case 3:
+                get_all_objects(2);
+                break;
+            case 4:
+                get_all_objects(3);
+                break;
+            case 5:
+                get_all_objects(4);
+                break;
+            case 6:
+                insert_new_object();
+                break;
+            case 7:
                 std::cout << "Exiting...\n";
                 return 0;
             default:
