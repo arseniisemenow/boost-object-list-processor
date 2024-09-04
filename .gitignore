@@ -3,3 +3,9 @@
 *.out
 .idea
 __pycache__/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+build-client
+build-server
+build

@@ -21,8 +21,8 @@ g++ \
 gdb \
 nlohmann-json3-dev
 
-RUN cmake --target object-list-processor-server && make
+RUN make uninstall && make install_server
 
-CMD ["./object-list-processor-server"]
+CMD ["./build-server/object-list-processor-server"]
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
 

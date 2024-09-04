@@ -45,5 +45,3 @@ add_executable(object-list-processor-client
 
 target_link_libraries(object-list-processor-server ${Boost_LIBRARIES} pqxx pq pthread)
 target_link_libraries(object-list-processor-client curl)
-
-#target_link_libraries(server PRIVATE shared)
