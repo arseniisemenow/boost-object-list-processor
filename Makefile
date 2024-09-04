@@ -23,14 +23,14 @@ get_all_objects_group_by_type:
 delete_all_objects:
 	sh tests/delete_all_objects/delete_all_objects.sh
 
-install: install_server_via_docker install_client
+install: run_server install_client
 uninstall: uninstall_server uninstall_client
 
-run:
-	./build-client/object-list-processor-client
-
-install_server_via_docker:
+run_server:
 	docker compose up -d
+
+cli:
+	./build-client/object-list-processor-client
 
 install_client:
 	mkdir -p build-client && cd build-client && cmake ..
