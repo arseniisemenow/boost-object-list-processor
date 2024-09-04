@@ -13,7 +13,7 @@ The backend server can be run via Docker or directly using CMake, while the clie
 - Python 3 (optional, for populating data)
 
 ## Example Usage
-![Example Usage](readme/example_usage.png)
+![Example Usage](readme/example_usage.gif)
     
 ## Installation
 
