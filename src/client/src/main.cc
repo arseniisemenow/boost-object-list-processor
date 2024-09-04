@@ -2,6 +2,12 @@
 #include <iostream>
 #include <string>
 
+bool IsNumber(const std::string &s) {
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
+}
+
 const std::string kUrls[] = {
     "http://localhost:8080/v1/object",
     "http://localhost:8080/v1/object?group_by=type&min_count=1",
@@ -105,22 +111,22 @@ void InsertNewObject() {
     do {
         std::cout << "Enter metadata key (or type 'done' to finish): ";
         std::cin.ignore();
-        std::getline(std::cin, metadata_key);
+        metadata_key.clear();
+        std::cin >> metadata_key;
 
         if (metadata_key == "done") break;
 
         std::cout << "Enter metadata value: ";
-        std::getline(std::cin, metadata_value);
+        std::cin >> metadata_value;
 
         if (!first) {
             metadata_json += ",";
         }
-        metadata_json += "\"" + metadata_key + "\":\"" + metadata_value + "\"";
+        if (!IsNumber(metadata_value)) { metadata_value = "\"" + metadata_value + "\""; }
+        metadata_json += "\"" + metadata_key + "\":" + metadata_value + "";
         first = false;
 
-        std::cout << "Add more metadata? (yes/no): ";
-        std::getline(std::cin, add_more_metadata);
-    } while (add_more_metadata == "yes");
+    } while (1);
 
     metadata_json += "}";
 
