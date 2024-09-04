@@ -17,9 +17,13 @@ The backend server can be run via Docker or directly using CMake, while the clie
     
 ## Installation
 
-### 1. Install Client and Server using `make`
+### 1.1. Install Client and Server using `make`
 ```bash
 make install
+```
+### 1.2.(optional) Populate database
+```bash
+make populate
 ```
 
 ### 2. Run the client
